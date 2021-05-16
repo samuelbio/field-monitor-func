@@ -3,7 +3,6 @@ import * as admin from "firebase-admin";
 import { Fiche } from "../models/model"
 
 const db = admin.firestore().collection('fiches');
-// admin.firestore().settings({ ignoreUndefinedProperties: true })
 
 const router = Router();
 
@@ -28,11 +27,14 @@ router.route('/')
             dayOfWork: req.body.dayOfWork,
             hourOfWork: req.body.hourOfWork,
             photo: req.body.photo,
-            isDualWallet: req.body.isDualWallet
+            isDualWallet: req.body.isDualWallet,
+            createdAt: admin.firestore.FieldValue.serverTimestamp(),
+            updatedAt: admin.firestore.FieldValue.serverTimestamp()
         } as Fiche;
         const result = await db.add(data)
         res.status(200).json({...data,id: result.id})
     } catch (error) {
+        console.error(error)
         res.status(409).send({message: "Bad request"})
     }
 })
@@ -66,7 +68,8 @@ router.route('/:id')
                 dayOfWork: body.dayOfWork,
                 hourOfWork: body.hourOfWork,
                 photo: body.photo,
-                isDualWallet: body.isDualWallet
+                isDualWallet: body.isDualWallet,
+                updatedAt: admin.firestore.FieldValue.serverTimestamp()
             } as Fiche;
             db.doc(id).update(fiche).then(result => {
                 res.status(200).send({message: "Fiche edited"})

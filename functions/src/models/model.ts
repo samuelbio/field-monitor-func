@@ -1,3 +1,4 @@
+import * as admin from "firebase-admin";
 
 export interface WholeSaler extends Heritage {
     wholeSallerId: string;
@@ -123,8 +124,8 @@ export interface GMSPlace {
 
 
 interface Heritage {
-    createdAt?: string;
-    updatedAt?: string;
+    createdAt?: admin.firestore.Timestamp;
+    updatedAt?: admin.firestore.Timestamp;
 }
 
 export interface Storage {
