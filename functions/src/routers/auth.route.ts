@@ -13,20 +13,23 @@ router.post('/checkmember', async(req, res) => {
             const body = req.body
             const commercials = await db.collection('commercials').where("password","==",body.password).get()
             if (commercials.empty) {
-                res.status(200).send({message: "User is not exist"})
+                res.status(404).send({message: "Phone or password is not valid"})
             }else {
                 const data:Commercial[] = []
-                commercials.forEach(elt => data.push(elt.data() as Commercial) )
+                commercials.forEach(elt => data.push({...elt.data(), id: elt.id} as Commercial) )
 
                 const result = data.find(elt => elt.phone?.e164Number === `+225${body.stk_a}`)
                 if (!!result) {
-                    res.status(200).send({message: "User exisit"})
+                    res.status(200).send({message: "User exist", data: {
+                        commercialId: result.id,
+                        wholeSalerId: result.wholeSalerId
+                    }})
                 } else {
-                    res.status(409).send({meessage: "User is not exisit"})
+                    res.status(404).send({meessage: "User is not exisit"})
                 }
             }
         } else {
-            res.status(409).send({message: "Params not valid"})
+            res.status(400).send({message: "Params not valid"})
         }
     } catch (error) {
         

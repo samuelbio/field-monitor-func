@@ -6,28 +6,38 @@ const db = admin.firestore().collection('fiches');
 
 const router = Router();
 
-router.route('/')
-.get(async (req, res) => {
+router
+.post('/all', async (req, res) => {
     try {
-        const fiches = await db.get();
+        const wholeSalerId = req.body.wholeSalerId;
+        const commercialId = req.body.commercialId;
+
+        const fiches = await db.where('wholeSalerId','==',wholeSalerId).where('commercialId','==',commercialId).get();
         const data:Fiche[] = []
-        fiches.forEach(elt => data.push(elt.data() as Fiche))
-        res.status(200).send(data)
+        fiches.forEach(elt => data.push({...elt.data(), id: elt.id} as Fiche))
+        res.status(200).json(data)
 
     } catch (error) {
-        res.status(409).send({message: "Bad request"})
+        res.status(400).send({message: "Bad request"})
     }
 })
+
+router.route('/')
 .post(async(req, res) => {
     try {
+        const body = req.body
         const data:Fiche = {
-            wholeSallerId: req.body.wholeSallerId,
-            stk_b: req.body.stk_b,
-            phones: req.body.phones,
-            dayOfWork: req.body.dayOfWork,
-            hourOfWork: req.body.hourOfWork,
-            photo: req.body.photo,
-            isDualWallet: req.body.isDualWallet,
+            wholeSalerId: body.wholeSalerId,
+            commercialId: body.commercialId,
+            name: body.name,
+            lastName: body.lastName,
+            type: body.type,
+            stk_b: body.stk_b,
+            phones: body.phones,
+            dayOfWork: body.dayOfWork,
+            hourOfWork: body.hourOfWork,
+            photo: body.photo,
+            isDualWallet: body.isDualWallet,
             createdAt: admin.firestore.FieldValue.serverTimestamp(),
             updatedAt: admin.firestore.FieldValue.serverTimestamp()
         } as Fiche;
@@ -35,7 +45,7 @@ router.route('/')
         res.status(200).json({...data,id: result.id})
     } catch (error) {
         console.error(error)
-        res.status(409).send({message: "Bad request"})
+        res.status(400).send({message: "Bad request"})
     }
 })
 
@@ -47,12 +57,12 @@ router.route('/:id')
         if (data.exists) {
             res.status(200).json(data.data())
         } else {
-            res.status(409).send({message: "Fiche doesn't exist"})
+            res.status(400).send({message: "Fiche doesn't exist"})
         }
 
     } catch (error) {
         console.error(error)
-        res.status(409).send({message: "Bad request"})
+        res.status(400).send({message: "Bad request"})
     }
 })
 .put(async(req, res) => {
@@ -62,7 +72,9 @@ router.route('/:id')
         if (data.exists) {
             const body = req.body;
             const fiche:Fiche = {
-                wholeSallerId: body.wholeSallerId,
+                name: body.name,
+                lastName: body.lastName,
+                type: body.type,
                 stk_b: body.stk_b,
                 phones: body.phones,
                 dayOfWork: body.dayOfWork,
@@ -76,12 +88,12 @@ router.route('/:id')
             })
             .catch(err => res.status(409).send({message: "Something wrong"}))
         } else {
-            res.status(409).send({message: "Fiche doesn't exist"})
+            res.status(404).send({message: "Fiche doesn't exist"})
         }
 
     } catch (error) {
         console.error(error)
-        res.status(409).send("Bad request")
+        res.status(400).send("Bad request")
     }
 })
 

@@ -64,14 +64,22 @@ export interface Commercial extends User {
 
 export interface Fiche extends Heritage {
     id?: string;
-    wholeSallerId: string;
+    commercialId: string;
+    wholeSalerId: string;
+    type: string;
+    name: string;
+    lastName: string;
     stk_b: string;
     phones?: Phone[];
     dayOfWork?: string[];
     hourOfWork?: HourOfWork;
-    locationDescription?: string;
+    placeDescription?: string;
     photo?: Storage;
     isDualWallet?: boolean;
+}
+
+export enum FicheType {
+
 }
 
 export enum Role {
