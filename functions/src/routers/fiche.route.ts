@@ -22,8 +22,8 @@ router
     }
 })
 
-router.route('/')
-.post(async(req, res) => {
+router
+.post('/', async(req, res) => {
     try {
         const body = req.body
 
