@@ -74,7 +74,8 @@ export interface Fiche extends Heritage {
     dayOfWork?: string[];
     hourOfWork?: HourOfWork;
     placeDescription?: string;
-    photo?: Storage;
+    place: GMSPlace;
+    photo: Storage;
     isDualWallet?: boolean;
 }
 
@@ -124,8 +125,7 @@ export interface Sort {
 export interface GMSPlace {
     name: string;
     placeId: string;
-    longitude: number;
-    latitude: number;
+    coordinate: admin.firestore.GeoPoint
     url: string;
     formatted_address: string;
 }

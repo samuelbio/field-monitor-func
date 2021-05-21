@@ -1,6 +1,6 @@
 import { Router} from "express";
 import * as admin from "firebase-admin";
-import { Fiche } from "../models/model"
+import { Fiche, GMSPlace } from "../models/model"
 
 const db = admin.firestore().collection('fiches');
 
@@ -26,6 +26,15 @@ router.route('/')
 .post(async(req, res) => {
     try {
         const body = req.body
+
+        const place:GMSPlace = {
+            formatted_address: body.place.formatted_address,
+            name: body.place.name,
+            placeId: body.place.placeId,
+            url: body.place.url,
+            coordinate: new admin.firestore.GeoPoint(body.place.coordinate.latitude, body.place.coordinate.longitude)
+        }
+
         const data:Fiche = {
             wholeSalerId: body.wholeSalerId,
             commercialId: body.commercialId,
@@ -36,11 +45,14 @@ router.route('/')
             phones: body.phones,
             dayOfWork: body.dayOfWork,
             hourOfWork: body.hourOfWork,
+            placeDescription: body.placeDescription,
             photo: body.photo,
+            place: place,
             isDualWallet: body.isDualWallet,
             createdAt: admin.firestore.FieldValue.serverTimestamp(),
             updatedAt: admin.firestore.FieldValue.serverTimestamp()
         } as Fiche;
+
         const result = await db.add(data)
         res.status(200).json({...data,id: result.id})
     } catch (error) {
@@ -71,6 +83,14 @@ router.route('/:id')
         const data = await db.doc(id).get()
         if (data.exists) {
             const body = req.body;
+
+            const place:GMSPlace = {
+                formatted_address: body.place.formatted_address,
+                name: body.place.name,
+                placeId: body.place.placeId,
+                url: body.place.url,
+                coordinate: new admin.firestore.GeoPoint(body.place.coordinate.latitude, body.place.coordinate.longitude)
+            }
             const fiche:Fiche = {
                 name: body.name,
                 lastName: body.lastName,
@@ -79,7 +99,9 @@ router.route('/:id')
                 phones: body.phones,
                 dayOfWork: body.dayOfWork,
                 hourOfWork: body.hourOfWork,
+                placeDescription: body.placeDescription,
                 photo: body.photo,
+                place: place,
                 isDualWallet: body.isDualWallet,
                 updatedAt: admin.firestore.FieldValue.serverTimestamp()
             } as Fiche;
