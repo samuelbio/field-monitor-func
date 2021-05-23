@@ -18,7 +18,7 @@ router.post('/checkmember', async(req, res) => {
                 const data:Commercial[] = []
                 commercials.forEach(elt => data.push({...elt.data(), id: elt.id} as Commercial) )
 
-                const result = data.find(elt => elt.phone?.e164Number === `+225${body.stk_a}`)
+                const result = data.find(elt => elt.stk_a?.e164Number === `+225${body.stk_a}`)
                 if (!!result) {
                     res.status(200).send({message: "User exist", data: {
                         commercialId: result.id,

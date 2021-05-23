@@ -25,3 +25,7 @@ app.use('/fiches', ficheRouter)
 app.use('/auth', authRouter)
 
 export const api = functions.https.onRequest(app)
+
+
+import * as comFunc from  "./functions/commercial.function";
+export const COMMERCIAL_ADD = comFunc.add

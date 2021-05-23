@@ -26,13 +26,16 @@ export interface Member extends Heritage {
     id?: string;
     name: string;
     lastName: string;
+    fullName?: string;
     phone?: Phone;
     email?: string;
-    password?: string;
     place?: string;
-    role?: Role[];
+    role?: Role;
     wholeSalerId?: string;
+    uid?: string
+    isWork: boolean;
 }
+
 
 export interface User extends Heritage {
     id?: string;
@@ -54,12 +57,15 @@ export interface BlocWoleSaler extends Heritage {
     password?: string;
 }
 
-export interface Commercial extends User {
+export interface Commercial extends Heritage {
     id?: string;
-    wholeSalerId?: string;
+    wholeSalerId: string;
+    stk_a: Phone;
+    password: string;
     blocId: string;
-    userId?: string;
-    zone?: string;
+    memberId: string;
+    subZone: string;
+    _member?: Member;
 }
 
 export interface Fiche extends Heritage {
