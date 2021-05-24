@@ -11,17 +11,6 @@ export interface Zone extends Heritage {
     name: string;
     wholeSalerId: string;
 }
-
-export interface Parc extends Heritage {
-    id?: string;
-    parcName: string;
-    wholeSalerId?: string;
-    blockId: string;
-    isActive: boolean;
-    zoneId: string;
-}
-
-
 export interface Member extends Heritage {
     id?: string;
     name: string;
@@ -34,15 +23,6 @@ export interface Member extends Heritage {
     wholeSalerId?: string;
     uid?: string
     isWork: boolean;
-}
-
-
-export interface User extends Heritage {
-    id?: string;
-    phone?: Phone;
-    password?: string;
-    memberId?: string;
-    wholeSalerId?: string;
 }
 
 export interface BlocWoleSaler extends Heritage {

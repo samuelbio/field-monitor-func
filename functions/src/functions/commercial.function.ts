@@ -1,5 +1,5 @@
 import { firestore } from "firebase-functions";
-// import { map, mergeMap, take, tap, toArray } from 'rxjs/operators';
+// import { map, merfgeMap, take, tap, toArray } from 'rxjs/operators';
 
 import * as admin from "firebase-admin";
 import { Commercial, Member } from "../models/model";
