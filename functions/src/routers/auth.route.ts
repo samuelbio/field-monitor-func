@@ -25,7 +25,7 @@ router.post('/checkmember', async(req, res) => {
                         wholeSalerId: result.wholeSalerId
                     }})
                 } else {
-                    res.status(404).send({meessage: "User is not exisit"})
+                    res.status(404).send({message: "User is not exisit"})
                 }
             }
         } else {
