@@ -65,6 +65,15 @@ export interface Fiche extends Heritage {
     isDualWallet?: boolean;
 }
 
+export interface Register extends Heritage {
+    id?: string;
+    commercialId: string;
+    wholeSalerId: string;
+    ficheId: string;
+    amountSent: string;
+    receivedAmount: string;
+}
+
 export enum FicheType {
 
 }

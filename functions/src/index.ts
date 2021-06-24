@@ -6,6 +6,7 @@ import * as express from "express";
 import * as cors from "cors";
 import { ficheRouter } from './routers/fiche.route';
 import { authRouter } from "./routers/auth.route";
+import { RegisterRouter } from "./routers/registre.route";
 
 const app = express();
 
@@ -22,6 +23,7 @@ app.use(express.json())
 app.use(cors({ origin: true}))
 
 app.use('/fiches', ficheRouter)
+app.use('/registers', RegisterRouter)
 app.use('/auth', authRouter)
 
 export const api = functions.https.onRequest(app)
