@@ -29,12 +29,3 @@ export const add = firestore
     })
 
 })
-
-export const del = firestore
-.document('members/{docId}')
-.onDelete( async(snapshot, context) => {
-    const data = snapshot.data() as Member
-    console.log('delete =>',data)
-
-    return null
-})

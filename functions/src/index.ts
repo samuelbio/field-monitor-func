@@ -30,4 +30,7 @@ export const api = functions.https.onRequest(app)
 
 
 import * as comFunc from  "./functions/commercial.function";
-export const COMMERCIAL_ADD = comFunc.add
+export const ADD_COMMERCIAL = comFunc.add
+
+import * as memberFunc from  "./functions/userCreation.function";
+export const CREATE_SUPERVISOR_ADMINISTRATOR = memberFunc.supAndAdminCreation

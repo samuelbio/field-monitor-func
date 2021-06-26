@@ -18,7 +18,7 @@ export interface Member extends Heritage {
     fullName?: string;
     phone?: Phone;
     email?: string;
-    place?: string;
+    password?: string;
     role?: Role;
     wholeSalerId?: string;
     uid?: string
@@ -31,8 +31,7 @@ export interface BlocWoleSaler extends Heritage {
     wholeSalerId?: string;
     zoneId: string;
     blockName: string;
-    firstName?: string;
-    lastName?: string;
+    memberId: string;
     email?: string;
     password?: string;
 }
@@ -70,8 +69,8 @@ export interface Register extends Heritage {
     commercialId: string;
     wholeSalerId: string;
     ficheId: string;
-    amountSent: string;
-    receivedAmount: string;
+    amountSent: number;
+    receivedAmount: number;
 }
 
 export enum FicheType {

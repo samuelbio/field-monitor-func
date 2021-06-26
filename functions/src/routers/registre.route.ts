@@ -54,14 +54,14 @@ router
             wholeSalerId: body.wholeSalerId,
             commercialId: body.commercialId,
             ficheId: body.ficheId,
-            amountSent: body.amountSent,
-            receivedAmount: body.receivedAmount,
+            amountSent: Number(body.amountSent),
+            receivedAmount: parseInt(body.receivedAmount),
             createdAt: admin.firestore.FieldValue.serverTimestamp(),
             updatedAt: admin.firestore.FieldValue.serverTimestamp()
         } as Register;
 
         const result = await db.add(data)
-        res.status(200).json({...data,id: result.id})
+        res.status(200).send({...data,id: result.id})
     } catch (error) {
         console.error(error)
         res.status(400).send({message: "Bad request"})
@@ -144,8 +144,8 @@ router.route('/:id')
             const body = req.body;
             const fiche:Register = {
                 ficheId: body.ficheId,
-                amountSent: body.amountSent,
-                receivedAmount: body.receivedAmount,
+                amountSent: Number(body.amountSent),
+                receivedAmount: Number(body.receivedAmount),
                 updatedAt: admin.firestore.FieldValue.serverTimestamp()
             } as Register;
             db.doc(id).update(fiche).then(result => {
