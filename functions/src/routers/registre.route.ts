@@ -50,6 +50,10 @@ router
     try {
         const body = req.body
 
+        // if (body.amountSent !== typeof(Number)) {
+        //     throw new Error("Invalid parameter");
+        // }
+
         const data:Register = {
             wholeSalerId: body.wholeSalerId,
             commercialId: body.commercialId,
@@ -63,7 +67,7 @@ router
         const result = await db.add(data)
         res.status(200).send({...data,id: result.id})
     } catch (error) {
-        console.error(error)
+        // console.error(error)
         res.status(400).send({message: "Bad request"})
     }
 })
