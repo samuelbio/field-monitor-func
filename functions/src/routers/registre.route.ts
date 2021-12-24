@@ -17,7 +17,9 @@ router
 
         const register = await db.where('wholeSalerId','==',wholeSalerId).where('commercialId','==',commercialId).get();
         const data:Register[] = []
-        register.forEach(elt => data.push({...elt.data(), id: elt.id} as Register))
+        register.forEach(elt => data.push({...elt.data(), id: elt.id, 
+            createdAt: elt.data().createdAt.toDate(),
+            updatedAt: elt.data().createdAt.toDate()} as Register))
 
         const result = await from(data)
         .pipe(
@@ -65,7 +67,7 @@ router
         } as Register;
 
         const result = await db.add(data)
-        res.status(200).send({...data,id: result.id})
+        res.status(200).json({...data,id: result.id})
     } catch (error) {
         // console.error(error)
         res.status(400).send({message: "Bad request"})
@@ -84,7 +86,9 @@ router.post('/fiche',async(req, res) => {
         .get()
 
         const data:Register[] = []
-        document.forEach(elt => data.push({...elt.data(), id: elt.id} as Register))
+        document.forEach(elt => data.push({...elt.data(), id: elt.id,
+            createdAt: elt.data().createdAt.toDate(),
+            updatedAt: elt.data().createdAt.toDate()} as Register))
 
         const result = await from(data)
         .pipe(
@@ -153,11 +157,11 @@ router.route('/:id')
                 updatedAt: admin.firestore.FieldValue.serverTimestamp()
             } as Register;
             db.doc(id).update(fiche).then(result => {
-                res.status(200).send({message: "Register edited"})
+                res.status(200).json({message: "Register edited"})
             })
-            .catch(err => res.status(409).send({message: "Something wrong"}))
+            .catch(err => res.status(409).json({message: "Something wrong"}))
         } else {
-            res.status(404).send({message: "Register doesn't exist"})
+            res.status(404).json({message: "Register doesn't exist"})
         }
 
     } catch (error) {

@@ -110,12 +110,12 @@ router.route('/:id')
             })
             .catch(err => res.status(409).send({message: "Something wrong"}))
         } else {
-            res.status(404).send({message: "Fiche doesn't exist"})
+            res.status(400).send({message: "Fiche doesn't exist"})
         }
 
     } catch (error) {
         console.error(error)
-        res.status(400).send("Bad request")
+        res.status(400).send({message:"Bad request", error: JSON.parse(error)})
     }
 })
 

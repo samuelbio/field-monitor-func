@@ -1,8 +1,10 @@
+import { Fiche } from './../models/model';
 import { Router} from "express";
 import * as admin from "firebase-admin";
 import { Commercial } from "../models/model";
 
 const db = admin.firestore();
+const membersCollections = admin.firestore().collection('members');
 // admin.firestore().settings({ ignoreUndefinedProperties: true })
 
 const router = Router();
@@ -20,9 +22,14 @@ router.post('/checkmember', async(req, res) => {
 
                 const result = data.find(elt => elt.stk_a?.e164Number === `+225${body.stk_a}`)
                 if (!!result) {
+                    const ficheDoc = await membersCollections.doc(result.memberId).get()
+                    const member:Fiche = ficheDoc.data() as Fiche
+
                     res.status(200).send({message: "User exist", data: {
                         commercialId: result.id,
-                        wholeSalerId: result.wholeSalerId
+                        wholeSalerId: result.wholeSalerId,
+                        lastName: member.name,
+                        firstName: member.lastName
                     }})
                 } else {
                     res.status(404).send({message: "User is not exisit"})
