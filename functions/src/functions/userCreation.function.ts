@@ -25,3 +25,14 @@ export const supAndAdminCreation = firestore
     })
 
 })
+
+export const supAndAdminDelete = firestore
+.document('members/{docId}')
+.onDelete( async(snapshot, context) => {
+    const member = snapshot.data() as Member
+
+    if (member.role !== "ADMINISTRATOR" && member.role !== "SUPERVISOR" && member.uid) { return }
+
+    return admin.auth().deleteUser(member.uid!)
+
+})
