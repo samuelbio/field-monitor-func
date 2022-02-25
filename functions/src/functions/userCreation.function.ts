@@ -1,6 +1,4 @@
 import { firestore } from "firebase-functions";
-// import { map, merfgeMap, take, tap, toArray } from 'rxjs/operators';
-
 import * as admin from "firebase-admin";
 import { Member } from "../models/model";
 const db = admin.firestore()
@@ -20,10 +18,21 @@ export const supAndAdminCreation = firestore
             displayName: `${member.name} ${member.lastName}`,
             disabled: false,
         }
-    ).then(res => {
-        return db.collection('members').doc(docId).update({...member, uid: res.uid} as Member)
-    })
+    )
+    .then(res => db.collection('members').doc(docId).update({...member, uid: res.uid} as Member))
+})
 
+export const supAndAdminUpdate = firestore
+.document('members/{docId}')
+.onUpdate( async(snapshot, context) => {
+    const member = snapshot.after.data() as Member
+
+    if (member.role !== "ADMINISTRATOR" && member.role !== "SUPERVISOR" && member.uid) { return }
+
+    return admin.auth().updateUser(member.uid!, {
+        password: member.password
+    })
+    .then(() => admin.auth().revokeRefreshTokens(member.uid!))
 })
 
 export const supAndAdminDelete = firestore
@@ -34,5 +43,5 @@ export const supAndAdminDelete = firestore
     if (member.role !== "ADMINISTRATOR" && member.role !== "SUPERVISOR" && member.uid) { return }
 
     return admin.auth().deleteUser(member.uid!)
-
+    .then(() => admin.auth().revokeRefreshTokens(member.uid!))
 })

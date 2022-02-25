@@ -9,14 +9,11 @@ export const add = firestore
 .document('commercials/{docId}')
 .onCreate( async(snapshot, context) => {
     const commercial = snapshot.data() as Commercial
-    console.log('commercial =>',commercial)
+    const memberSnapshot = await db.collection('members').doc(commercial.memberId).get()
 
-    const snap = await db.collection('members').doc(commercial.memberId).get()
-
-    if(!snap.exists) return
+    if(!memberSnapshot.exists) return
     
-    const member = snap.data() as Member
-
+    const member = memberSnapshot.data() as Member
     return admin.auth().createUser(
         {
             password: commercial.password,
@@ -24,8 +21,33 @@ export const add = firestore
             displayName: `${member.name} ${member.lastName}`,
             disabled: false,
         }
-    ).then(res => {
-        return db.collection('members').doc(commercial.memberId).update({...member, uid: res.uid} as Member)
-    })
+    )
+    .then(res => db.collection('members').doc(commercial.memberId).update({...member, uid: res.uid} as Member))
+})
 
+export const update = firestore
+.document('commercials/{docId}')
+.onUpdate( async(snapshot, context) => {
+    const commercial = snapshot.before.data() as Commercial
+    const memberSnapshot = await db.collection('members').doc(commercial.memberId).get()
+
+    if(!memberSnapshot.exists) return
+    
+    const member = memberSnapshot.data() as Member
+    return admin.auth().updateUser(member.uid!, {
+        password: member.password
+    }).then(() => admin.auth().revokeRefreshTokens(member.uid!))
+})
+
+export const del = firestore
+.document('commercials/{docId}')
+.onDelete( async(snapshot, context) => {
+    const commercial = snapshot.data() as Commercial
+    const memberSnapshot = await db.collection('members').doc(commercial.memberId).get()
+
+    if(!memberSnapshot.exists) return
+    
+    const member = memberSnapshot.data() as Member
+    return admin.auth().deleteUser(member.uid!)
+    .then(() => admin.auth().revokeRefreshTokens(member.uid!))
 })
